@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useForgotPassword } from '@/reactquery';
+import { responseType } from '@/utils/types';
 import { Label } from '@radix-ui/react-label';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -40,9 +41,9 @@ const ForgotPassword = () => {
       return;
     }
 
-    const res = await mutateAsync(emailState.value);
+    const res: responseType = await mutateAsync(emailState.value);
 
-    if (res.error) {
+    if (!res.status) {
       setError(res.message || 'Forgot password failed');
       setTimeout(() => {
         setError('');
@@ -87,7 +88,7 @@ const ForgotPassword = () => {
               {isPending ? 'Sending...' : 'Send'}
             </Button>
             <Button variant={'outline'}>
-              <Link to="/login?email=" className="w-full ">
+              <Link to="/login" className="w-full ">
                 Cancel
               </Link>
             </Button>

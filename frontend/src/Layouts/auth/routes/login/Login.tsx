@@ -12,13 +12,12 @@ import { useLogin } from '@/reactquery';
 import { setIsLoading } from '@/store/slices/loaderSlice';
 import { AppDispatch } from '@/store/store';
 import { loginSchema } from '@/utils/schemas';
-import { loginSchemaType } from '@/utils/types';
+import { loginSchemaType, responseType } from '@/utils/types';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-
 const Login = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,8 +37,8 @@ const Login = () => {
   const { mutateAsync, isPending } = useLogin();
   async function submitHandler(data: loginSchemaType) {
     dispatch(setIsLoading(true));
-    const res = await mutateAsync(data);
-    if (res.error) {
+    const res: responseType = await mutateAsync(data);
+    if (!res.status) {
       setErrorMsg(res.message);
       setTimeout(() => {
         setErrorMsg('');

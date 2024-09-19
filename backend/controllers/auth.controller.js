@@ -158,7 +158,7 @@ export const resendOtpController = async (req, res) => {
     await sendOtpEmail(email, otp);
     res.status(200).send({
       status: true,
-      message: 'OTP resent to your email',
+      message: 'OTP has been resent successfully',
       data: { email },
     });
   } catch (error) {

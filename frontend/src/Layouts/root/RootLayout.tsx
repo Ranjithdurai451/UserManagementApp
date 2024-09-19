@@ -11,7 +11,7 @@ const RootLayout = () => {
   async function submitHandler() {
     const res = await mutateAsync();
 
-    if (res.error) {
+    if (!res.status) {
       alert(res.error || 'Logout failed');
       return;
     }

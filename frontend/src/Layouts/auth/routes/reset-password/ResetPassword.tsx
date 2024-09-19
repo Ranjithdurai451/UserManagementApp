@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useResetPassword } from '@/reactquery';
+import { responseType } from '@/utils/types';
 import { Label } from '@radix-ui/react-label';
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -56,8 +57,11 @@ const ResetPassword = () => {
       navigate('/');
       return;
     }
-    const res = await mutateAsync({ token, password: passwordState.value });
-    if (res.error) {
+    const res: responseType = await mutateAsync({
+      token,
+      password: passwordState.value,
+    });
+    if (!res.status) {
       setErrorMsg(res.message || 'Reset password failed');
       setTimeout(() => {
         setErrorMsg('');

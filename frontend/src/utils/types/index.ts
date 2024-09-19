@@ -16,3 +16,12 @@ export type authSliceType = {
     id: string;
   };
 };
+
+export type responseType = {
+  status: boolean;
+  message: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any;
+  error?: string;
+
+}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -15,6 +16,7 @@ import { useResendOtp, useVerifyOtp } from '@/reactquery';
 import { setUser } from '@/store/slices/authSlice';
 import { setIsLoading } from '@/store/slices/loaderSlice';
 import { AppDispatch } from '@/store/store';
+import { responseType } from '@/utils/types';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -27,25 +29,29 @@ const VerifyOtp = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
 
-  var [email, setEmail] = useState('');
+  const [email, setEmail] = useState('');
   const [resendOtpEnabled, setResendOtpEnabled] = useState(false);
   const [countdown, setCountdown] = useState(60);
 
-  var [otpState, setOtpState] = useState({
+  const [otpState, setOtpState] = useState({
     otp: '',
     error: '',
+    success: '',
   });
   function changeHandler(value: string) {
     if (value.length < 4) {
       setOtpState({
         otp: otpState.otp + value,
         error: ' Please enter a valid OTP',
+        success: '',
       });
     } else {
       setOtpState({
         otp: value,
         error: '',
+        success: '',
       });
+      if (value.length === 6) verifyOtpHandler(event);
     }
   }
 
@@ -56,16 +62,18 @@ const VerifyOtp = () => {
       setOtpState({
         otp: '',
         error: 'Please enter a valid OTP',
+        success: '',
       });
       return;
     }
     try {
       dispatch(setIsLoading(true));
-      const res = await mutateAsync({ otp: otpState.otp, email });
-      if (res.error) {
+      const res: responseType = await mutateAsync({ otp: otpState.otp, email });
+      if (!res.status) {
         setOtpState({
           otp: '',
           error: res.message,
+          success: '',
         });
         dispatch(setIsLoading(false));
         return;
@@ -80,7 +88,7 @@ const VerifyOtp = () => {
   }
 
   useEffect(() => {
-    var email = searchParams.get('email');
+    const email = searchParams.get('email');
     if (email) {
       setEmail(email);
     }
@@ -90,7 +98,9 @@ const VerifyOtp = () => {
       const timer = setTimeout(() => {
         setCountdown(countdown - 1);
       }, 1000);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+      };
     } else {
       setResendOtpEnabled(true);
     }
@@ -102,7 +112,22 @@ const VerifyOtp = () => {
   const handleResendOtp = async (e: any) => {
     e.preventDefault();
     try {
-      await resendOtp({ email });
+      const res: responseType = await resendOtp({ email });
+      // console.log(res);
+      if (!res.status) {
+        // console.log(res.message);
+        setOtpState({
+          otp: '',
+          error: res.message,
+          success: '',
+        });
+      } else {
+        setOtpState({
+          otp: '',
+          error: '',
+          success: res.message,
+        });
+      }
       setResendOtpEnabled(false);
       setCountdown(60);
     } catch (error) {
@@ -141,6 +166,10 @@ const VerifyOtp = () => {
             </div>
             {otpState.error && (
               <p className="text-xs text-red-500">{otpState.error}</p>
+            )}
+
+            {otpState.success && (
+              <p className="text-xs text-green-500">{otpState.success}</p>
             )}
 
             {!resendOtpEnabled && (

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { signUpSchemaType } from '@/utils/types';
+import { responseType, signUpSchemaType } from '@/utils/types';
 import { signupSchema } from '@/utils/schemas';
 import { useSignup } from '@/reactquery';
 import { Link, useNavigate } from 'react-router-dom';
@@ -39,9 +39,9 @@ const SignUp = () => {
   const { mutateAsync, isPending } = useSignup();
   async function submitHandler(data: signUpSchemaType) {
     dispatch(setIsLoading(true));
-    const user = await mutateAsync(data);
-    if (user.error) {
-      setErrorMsg(user.message);
+    const res: responseType = await mutateAsync(data);
+    if (!res.status) {
+      setErrorMsg(res.message);
       setTimeout(() => {
         setErrorMsg('');
       }, 3000);

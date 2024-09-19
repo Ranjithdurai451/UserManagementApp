@@ -7,7 +7,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "prod:build": "npm i && cd ../frontend &&  npm i && npm run build ",
-    "prod:start": "ENV=prod PORT=3050 nodemon server.js"
+    "prod:start": "ENV=prod PORT=3000 nodemon server.js"
   },
   "keywords": [],
   "author": "",
