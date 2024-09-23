@@ -1,3 +1,4 @@
+import PasswordField from '@/components/PasswordField';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -84,7 +85,7 @@ const Login = () => {
                   Forgot your password?
                 </Link>
               </div>
-              <Input id="password" type="password" {...register('password')} />
+              <PasswordField register={register} />
               {errors.password && (
                 <p className="text-xs text-red-500">
                   {errors.password.message}

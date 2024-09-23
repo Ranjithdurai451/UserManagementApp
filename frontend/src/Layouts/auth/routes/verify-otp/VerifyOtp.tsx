@@ -17,12 +17,13 @@ import { setUser } from '@/store/slices/authSlice';
 import { setIsLoading } from '@/store/slices/loaderSlice';
 import { AppDispatch } from '@/store/store';
 import { responseType } from '@/utils/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const VerifyOtp = () => {
+  const otpRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
@@ -51,14 +52,14 @@ const VerifyOtp = () => {
         error: '',
         success: '',
       });
-      if (value.length === 6) verifyOtpHandler(event);
+      if (value.length === 6) verifyOtpHandler(value);
     }
   }
 
   const { mutateAsync, isPending } = useVerifyOtp();
-  async function verifyOtpHandler(e: any) {
-    e.preventDefault();
-    if (otpState.otp.length < 4) {
+  async function verifyOtpHandler(otp: string) {
+    // e.preventDefault();
+    if (otp.length < 4) {
       setOtpState({
         otp: '',
         error: 'Please enter a valid OTP',
@@ -68,13 +69,15 @@ const VerifyOtp = () => {
     }
     try {
       dispatch(setIsLoading(true));
-      const res: responseType = await mutateAsync({ otp: otpState.otp, email });
+      const res: responseType = await mutateAsync({ otp: otp, email });
       if (!res.status) {
         setOtpState({
           otp: '',
           error: res.message,
           success: '',
         });
+        if (otpRef.current) otpRef.current.value = '';
+
         dispatch(setIsLoading(false));
         return;
       } else {
@@ -121,12 +124,14 @@ const VerifyOtp = () => {
           error: res.message,
           success: '',
         });
+        if (otpRef.current) otpRef.current.value = '';
       } else {
         setOtpState({
           otp: '',
           error: '',
           success: res.message,
         });
+        if (otpRef.current) otpRef.current.value = '';
       }
       setResendOtpEnabled(false);
       setCountdown(60);
@@ -152,6 +157,9 @@ const VerifyOtp = () => {
             <div className="flex justify-center">
               <InputOTP
                 maxLength={6}
+                // value={otpState.otp}
+                ref={otpRef}
+                id="otp"
                 onChange={(value) => changeHandler(value)} //changeHandler(value)}
               >
                 <InputOTPGroup>
@@ -184,9 +192,9 @@ const VerifyOtp = () => {
               </button>
             )}
             <Button
-              type="submit"
+              // type="submit"
               className="w-full disabled:cursor-not-allowed disabled:opacity-45"
-              onClick={(e) => verifyOtpHandler(e)}
+              onClick={() => verifyOtpHandler(otpState.otp)}
               disabled={isPending}
             >
               {isPending ? 'Verifying...' : 'Verify'}

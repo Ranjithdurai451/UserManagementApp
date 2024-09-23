@@ -1,3 +1,4 @@
+import PasswordField from '@/components/PasswordField';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -6,13 +7,11 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { useResetPassword } from '@/reactquery';
 import { responseType } from '@/utils/types';
 import { Label } from '@radix-ui/react-label';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-// import React from 'react'
 
 const ResetPassword = () => {
   const [errorMsg, setErrorMsg] = useState('');
@@ -20,9 +19,11 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const [searchParam] = useSearchParams();
 
-  if (!searchParam.get('token')) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (!searchParam.get('token')) {
+      navigate('/');
+    }
+  }, []);
 
   const [passwordState, setPasswordState] = useState({
     value: '',
@@ -43,8 +44,7 @@ const ResetPassword = () => {
     }
   };
   const { mutateAsync, isPending } = useResetPassword();
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function submitHandler() {
     if (passwordState.value == '') {
       setPasswordState({ value: '', error: 'Password is required' });
       return;
@@ -75,45 +75,40 @@ const ResetPassword = () => {
     }, 1000);
   }
   return (
-    <form onSubmit={submitHandler}>
-      <Card className="sm:w-[360px] mx-auto">
-        <CardHeader>
-          <CardTitle className="text-2xl">Set New Password</CardTitle>
-          <CardDescription>
-            Enter your new password and confirm it.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">New Password</Label>
-              <Input
-                type="password"
-                id="password"
-                placeholder="New Password"
-                onChange={handlePasswordChange}
-              />
-              {passwordState.error && (
-                <div className="text-xs text-red-500">
-                  {passwordState.error}
-                </div>
-              )}
-            </div>
-            {errorMsg && <div className="text-xs text-red-500">{errorMsg}</div>}
-            {successMsg && (
-              <div className="text-xs text-green-600 ">{successMsg}</div>
-            )}
+    <Card className="sm:w-[360px] mx-auto">
+      <CardHeader>
+        <CardTitle className="text-2xl">Set New Password</CardTitle>
+        <CardDescription>
+          Enter your new password and confirm it.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email">New Password</Label>
 
-            <Button
-              type="submit"
-              className="w-full disabled:cursor-not-allowed disabled:opacity-45"
-            >
-              {isPending ? 'Resetting...' : 'Reset Password'}
-            </Button>
+            <PasswordField
+              isReactHookForm={false}
+              onChange={handlePasswordChange}
+            />
+            {passwordState.error && (
+              <div className="text-xs text-red-500">{passwordState.error}</div>
+            )}
           </div>
-        </CardContent>
-      </Card>
-    </form>
+          {errorMsg && <div className="text-xs text-red-500">{errorMsg}</div>}
+          {successMsg && (
+            <div className="text-xs text-green-600 ">{successMsg}</div>
+          )}
+
+          <Button
+            onClick={submitHandler}
+            className="w-full disabled:cursor-not-allowed disabled:opacity-45"
+          >
+            {isPending ? 'Resetting...' : 'Reset Password'}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-label';
+import PasswordField from '@/components/PasswordField';
 
 const SignUp = () => {
   const [errorMsg, setErrorMsg] = useState('');
@@ -91,7 +92,9 @@ const SignUp = () => {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" {...register('password')} />
+              {/* <Input id="password" type="password" {...register('password')} />
+               */}
+              <PasswordField register={register} />
               {errors.password && (
                 <p className="text-xs text-red-500">
                   {errors.password.message}

@@ -58,7 +58,7 @@ function App() {
       }, 1000);
     }
 
-    checkAuth();
+    // checkAuth();
   }, [dispatch]);
   const router = createBrowserRouter([
     {
@@ -110,7 +110,7 @@ function App() {
 
     {
       path: '/in',
-      element: isAuth.isAuthenticated ? <RootLayout /> : <Navigate to={'/'} />,
+      element: !isAuth.isAuthenticated ? <RootLayout /> : <Navigate to={'/'} />,
     },
   ]);
 
