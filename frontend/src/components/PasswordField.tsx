@@ -26,6 +26,7 @@ const PasswordField = ({
           id={fieldName}
           type={passwordVisible ? 'text' : 'password'}
           className={className}
+          placeholder="********"
           {...register(fieldName)}
         />
       )}
@@ -34,6 +35,7 @@ const PasswordField = ({
           id={fieldName}
           type={passwordVisible ? 'text' : 'password'}
           className={className}
+          placeholder="********"
           onChange={onChange}
         />
       )}

@@ -12,7 +12,6 @@ const transport = nodemailer.createTransport({
   },
 });
 
-console.log(process.env.EMAIL);
 export const findUser = async (email) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -32,7 +31,6 @@ export const sendEmail = async (email, subject, text) => {
 };
 
 export const sendOtpEmail = async (email, otp) => {
-  console.log(email, otp);
   let mailOptions = {
     from: process.env.EMAIL,
     to: email,

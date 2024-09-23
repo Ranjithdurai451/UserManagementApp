@@ -8,12 +8,8 @@ import { useNavigate } from 'react-router-dom';
 const RootLayout = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
-  const state: RootState = useSelector((state: RootState) => state);
-  console.log(state);
-  const user = {
-    email: 'ranjithdurai111@gmail.com',
-    username: 'Ranjith',
-  };
+  const user = useSelector((state: RootState) => state.auth.user);
+
   const { mutateAsync, isPending } = useLogout();
   async function submitHandler() {
     const res = await mutateAsync();
@@ -29,10 +25,10 @@ const RootLayout = () => {
     <div className="grid w-dvw h-dvh place-content-center">
       <div className="flex flex-col items-center gap-3">
         <img
-          src="https://ui-avatars.com/api/?name=Ranjith&size=248"
-          className="w-[145px] h-[145px] object-cover rounded-full"
+          src={`https://ui-avatars.com/api/?name=${user?.username}&size=248&background=random&length=1&rounded=true&font-size=0.6 `}
+          className="w-[145px] h-[145px] object-cover rounded-full outline outline-[6px]  outline-gray-700"
         />
-        <h1 className="text-5xl ">Hi , @{user.username}</h1>
+        <h1 className="text-5xl ">Hi, @{user.username}</h1>
         <h1 className="text-lg">{user.email}</h1>
         <Button
           onClick={submitHandler}
@@ -41,11 +37,6 @@ const RootLayout = () => {
           {isPending ? 'Logging out...' : 'Logout'}
         </Button>
       </div>
-      {/* <header className="flex justify-end w-full">
-        <button onClick={submitHandler}>
-          {isPending ? 'Logging out...' : 'Logout'}
-        </button>
-      </header> */}
     </div>
   );
 };

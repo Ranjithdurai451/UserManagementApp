@@ -116,9 +116,8 @@ const VerifyOtp = () => {
     e.preventDefault();
     try {
       const res: responseType = await resendOtp({ email });
-      // console.log(res);
+
       if (!res.status) {
-        // console.log(res.message);
         setOtpState({
           otp: '',
           error: res.message,
@@ -141,7 +140,12 @@ const VerifyOtp = () => {
   };
 
   return (
-    <form>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        verifyOtpHandler(otpState.otp);
+      }}
+    >
       <Card className="sm:w-[360px] mx-auto">
         <CardHeader>
           <CardTitle className="text-2xl">Confirm it's you</CardTitle>
@@ -192,9 +196,8 @@ const VerifyOtp = () => {
               </button>
             )}
             <Button
-              // type="submit"
+              type="submit"
               className="w-full disabled:cursor-not-allowed disabled:opacity-45"
-              onClick={() => verifyOtpHandler(otpState.otp)}
               disabled={isPending}
             >
               {isPending ? 'Verifying...' : 'Verify'}
