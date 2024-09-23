@@ -1,9 +1,8 @@
 import { Router } from 'express';
 
 import {
-  signupMiddleware,
-  loginMiddleware,
   authorizeMiddleware,
+  validate,
 } from '../middlewares/auth.middleware.js';
 import {
   signupController,
@@ -15,11 +14,12 @@ import {
   resendOtpController,
   verifyOptController,
 } from '../controllers/auth.controller.js';
+import { loginSchema, signupSchema } from '../utils/schemas.js';
 const app = Router();
 
-app.post('/signup', signupMiddleware, signupController);
+app.post('/signup', validate(signupSchema), signupController);
 
-app.post('/login', loginMiddleware, loginController);
+app.post('/login', validate(loginSchema), loginController);
 
 app.post('/verify-otp', verifyOptController);
 

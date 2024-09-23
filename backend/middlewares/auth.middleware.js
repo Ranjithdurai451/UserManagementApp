@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import joi from 'joi';
+
 export const authorizeMiddleware = (req, res, next) => {
   try {
     console.log('cookies', req.cookies);
@@ -25,47 +25,10 @@ export const authorizeMiddleware = (req, res, next) => {
       .json({ message: 'unauthorized', error: error.message });
   }
 };
-export const loginMiddleware = (req, res, next) => {
-  const loginSchema = joi.object({
-    email: joi.string().required().email().messages({
-      'string.empty': 'email cannot be empty',
-      'string.email': 'email must be a valid email',
-    }),
-    password: joi.string().required().min(6).messages({
-      'string.empty': 'password cannot be empty',
-      'string.min': 'password must be at least 6 characters long',
-    }),
-  });
 
-  const { error } = loginSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({
-      message: error.details[0].message,
-      error: 'invalid credentials',
-    });
-  }
-  next();
-};
-
-export const signupMiddleware = (req, res, next) => {
-  const schema = joi.object({
-    username: joi.string().required().max(30).min(3).messages({
-      'string.empty': 'username cannot be empty',
-      'string.min': 'username must be at least 3 characters long',
-
-      'string.max': 'username must be at most 30 characters long',
-    }),
-    email: joi.string().required().email().messages({
-      'string.empty': 'email cannot be empty',
-      'string.email': 'email must be a valid email',
-    }),
-    password: joi.string().required().min(6).messages({
-      'string.empty': 'password cannot be empty',
-      'string.min': 'password must be at least 6 characters long',
-    }),
-  });
-
+export const validate = (schema) => (req, res, next) => {
   const { error } = schema.validate(req.body);
+
   if (error) {
     return res.status(400).json({
       message: error.details[0].message,
