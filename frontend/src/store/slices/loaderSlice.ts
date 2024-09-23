@@ -4,7 +4,7 @@ const loaderSlice = createSlice({
   name: 'loader',
   initialState: {
     isAuthLoading: false,
-    innitialLoader: false,
+    innitialLoader: true,
   },
   reducers: {
     setIsLoading: (state, action: PayloadAction<boolean>) => {
