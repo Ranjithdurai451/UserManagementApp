@@ -27,6 +27,7 @@ export const authorizeMiddleware = (req, res, next) => {
 };
 
 export const validate = (schema) => (req, res, next) => {
+  console.log(req.body);
   const { error } = schema.validate(req.body);
 
   if (error) {

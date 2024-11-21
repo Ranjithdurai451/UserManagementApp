@@ -14,6 +14,8 @@ export type authSliceType = {
     email: string;
     username: string;
     id: string;
+    profileImg: string,
+    role: string,
   };
 };
 

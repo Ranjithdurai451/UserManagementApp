@@ -14,6 +14,7 @@ export async function signupAction(data: signUpSchemaType) {
           email: data.email,
           username: data.username,
           password: data.password,
+          profileImg: `https://ui-avatars.com/api/?name=${data?.username}&size=248&background=random&length=1&rounded=true&font-size=0.6 `
         }),
       }
     );

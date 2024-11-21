@@ -12,7 +12,11 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-
+enum Role{
+  ADMIN
+  USER
+  DEMO
+}
 
 model  user{
   id String @id @default(auto()) @map("_id") @db.ObjectId
@@ -20,7 +24,8 @@ model  user{
   username String
   password String
   otp String?
+  role Role?  @default(USER)
   otpExpiry DateTime?
-  profileImgUrl String?
-  profileImgId String? 
+  profileImg String
 }
+

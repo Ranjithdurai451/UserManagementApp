@@ -6,12 +6,12 @@ import { sendOtpEmail, otpExpiryTime } from '../utils/index.js';
 
 export const signupController = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, profileImg } = req.body;
 
     const userExists = await findUser(email);
 
     if (userExists) {
-      return res.status(400).json({
+      return res.status(400).send({
         status: false,
         message: 'User already exists',
         error: 'signup failed',
@@ -29,6 +29,7 @@ export const signupController = async (req, res) => {
         password: hashedPassword,
         otp,
         otpExpiry,
+        profileImg,
       },
     });
 
@@ -55,7 +56,7 @@ export const loginController = async (req, res) => {
     if (!userExists) {
       return res.status(400).json({
         status: false,
-        message: 'User does not exist',
+        message: 'User not found, please signup',
         error: 'login failed',
       });
     }
@@ -111,6 +112,8 @@ export const verifyOptController = async (req, res) => {
         id: user.id,
         email: user.email,
         username: user.username,
+        profileImg: user.profileImg,
+        role: user.role,
       },
       process.env.JWT_SECRET
     );
@@ -128,6 +131,8 @@ export const verifyOptController = async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        profileImg: user.profileImg,
+        role: user.role,
       },
     });
   } else {
@@ -177,7 +182,6 @@ export const logoutController = async (req, res) => {
     sameSite: 'strict',
   });
   const token = req.cookies?.jwt;
-  console.log('token', token);
   res.send({ status: true, data: null, message: 'success' });
 };
 

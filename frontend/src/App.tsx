@@ -19,6 +19,8 @@ import { setInnitialLoader } from './store/slices/loaderSlice';
 import ForgotPassword from './Layouts/auth/routes/forgot-password/ForgotPassword';
 import ResetPassword from './Layouts/auth/routes/reset-password/ResetPassword';
 import VerifyOtp from './Layouts/auth/routes/verify-otp/VerifyOtp';
+import Profile from './Layouts/root/components/Profile';
+import Admin from './Layouts/root/components/Admin';
 
 function App() {
   const isAuth = useSelector((state: RootState) => state.auth);
@@ -41,7 +43,7 @@ function App() {
         }
       );
       const resData = await res.json();
-
+      console.log('Res', resData);
       if (resData.error) {
         dispatch(clearUser());
         setTimeout(() => {
@@ -111,6 +113,17 @@ function App() {
     {
       path: '/in',
       element: isAuth.isAuthenticated ? <RootLayout /> : <Navigate to={'/'} />,
+
+      children: [
+        {
+          index: true,
+          element: <Profile />,
+        },
+        {
+          path: '/in/admin',
+          element: <Admin />,
+        },
+      ],
     },
   ]);
 

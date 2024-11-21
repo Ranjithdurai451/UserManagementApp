@@ -3,8 +3,11 @@ export const signupSchema = joi.object({
   username: joi.string().required().max(30).min(3).messages({
     'string.empty': 'username cannot be empty',
     'string.min': 'username must be at least 3 characters long',
-
     'string.max': 'username must be at most 30 characters long',
+  }),
+  profileImg: joi.string().required().min(3).messages({
+    'string.empty': 'profile cannot be empty',
+    'string.min': 'profile must be at least 3 characters long',
   }),
   email: joi.string().required().email().messages({
     'string.empty': 'email cannot be empty',

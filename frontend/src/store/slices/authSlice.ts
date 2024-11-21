@@ -7,6 +7,8 @@ const initialState: authSliceType = {
     email: '',
     username: '',
     id: '',
+    role: "",
+    profileImg: ""
   },
 };
 const authSlice = createSlice({
@@ -15,7 +17,7 @@ const authSlice = createSlice({
   reducers: {
     setUser: (
       state,
-      action: PayloadAction<{ email: string; username: string; id: string }>
+      action: PayloadAction<{ email: string; username: string; id: string, profileImg: string, role: string }>
     ) => {
       state.isAuthenticated = true;
       state.user = action.payload;
@@ -27,6 +29,8 @@ const authSlice = createSlice({
         email: '',
         username: '',
         id: '',
+        profileImg: "",
+        role: ""
       };
     },
   },

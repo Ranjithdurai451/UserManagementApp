@@ -6,6 +6,7 @@ import authRouter from './routes/auth.route.js';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import usersRoutes from './routes/users.route.js';
 
 const app = express();
 dotenv.config();
@@ -28,6 +29,7 @@ app.get('/api', (req, res) => {
   res.send('User Management System Server');
 });
 app.use('/api/auth', authRouter);
+app.use('/api/users/', usersRoutes);
 
 app.use('/api/*', (req, res, next) => {
   res.status(404).send('Invalid endpoint,please check other endpoints');
@@ -51,10 +53,21 @@ prisma
   .$connect()
   .then(async () => {
     console.log('Database connected');
-    app.listen(port, () => {
-      console.log(`Server started on port http://localhost:${port}`);
-    });
   })
   .catch((e) => {
     console.log('Error connecting to database: ');
   });
+app.listen(port, () => {
+  console.log(`Server started on port http://localhost:${port}`);
+});
+// (async () => {
+// try{
+//   await prisma.
+
+
+// }
+// catch(error){
+//   console.log(error);
+// }
+
+// })();
